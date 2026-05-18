@@ -1,5 +1,3 @@
-Copie este conteúdo para src/data/mockData.ts:
-
 import { Processo, User } from '../types';
 
 export const mockProcessos: Processo[] = [

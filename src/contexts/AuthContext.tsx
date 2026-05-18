@@ -1,101 +1,63 @@
-export type UserRole =
-  | 'administrador'
-  | 'vendedor'
-  | 'gerente'
-  | 'financeiro'
-  | 'usados'
-  | 'secretaria'
-  | 'liberacao'
-  | 'diretoria';
+import { createContext, useContext, useState, ReactNode } from 'react';
+import { User, AuthContextType } from '../types';
 
-export type ProcessType = 'venda' | 'compra';
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export type ProcessStatus =
-  | 'rascunho'
-  | 'aguardando_gerente'
-  | 'aguardando_financeiro'
-  | 'aguardando_usados'
-  | 'aguardando_secretaria'
-  | 'aguardando_liberacao'
-  | 'aprovado'
-  | 'reprovado';
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
 
-export type DocumentType =
-  | 'proposta'
-  | 'documento_cliente'
-  | 'comprovante_pagamento'
-  | 'documento_veiculo'
-  | 'nota_fiscal_compra'
-  | 'nota_fiscal_venda'
-  | 'outros';
-
-export interface User {
-  id: string;
-  nome: string;
-  email: string;
-  role: UserRole;
-  ativo: boolean;
-  createdAt: Date;
+interface AuthProviderProps {
+  children: ReactNode;
 }
 
-export interface Cliente {
-  id: string;
-  nome: string;
-  cpf: string;
-  telefone: string;
-  email: string;
-  endereco: string;
-}
+export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const [user, setUser] = useState<User | null>(() => {
+    const savedUser = localStorage.getItem('vianuvem_user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
 
-export interface Veiculo {
-  id: string;
-  marca: string;
-  modelo: string;
-  ano: number;
-  placa: string;
-  chassi: string;
-  cor: string;
-  tipo: 'novo' | 'usado';
-}
+  const login = async (email: string, password: string, otp: string) => {
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
-export interface Documento {
-  id: string;
-  processoId: string;
-  tipo: DocumentType;
-  nome: string;
-  url: string;
-  uploadedBy: string;
-  uploadedAt: Date;
-}
+    if (otp.length !== 6) {
+      throw new Error('Código OTP inválido');
+    }
 
-export interface Aprovacao {
-  id: string;
-  processoId: string;
-  aprovador: string;
-  role: UserRole;
-  status: 'pendente' | 'aprovado' | 'reprovado';
-  observacao?: string;
-  dataAprovacao?: Date;
-}
+    const mockUser: User = {
+      id: '1',
+      nome: email.split('@')[0],
+      email,
+      role: email.includes('admin') ? 'administrador' :
+            email.includes('gerente') ? 'gerente' :
+            email.includes('financeiro') ? 'financeiro' :
+            email.includes('usados') ? 'usados' :
+            email.includes('secretaria') ? 'secretaria' :
+            email.includes('liberacao') ? 'liberacao' :
+            email.includes('diretoria') ? 'diretoria' : 'vendedor',
+      ativo: true,
+      createdAt: new Date(),
+    };
 
-export interface Processo {
-  id: string;
-  tipo: ProcessType;
-  cliente: Cliente;
-  veiculoNovo?: Veiculo;
-  veiculoUsado?: Veiculo;
-  vendedor: User;
-  valor: number;
-  status: ProcessStatus;
-  documentos: Documento[];
-  aprovacoes: Aprovacao[];
-  createdAt: Date;
-  updatedAt: Date;
-}
+    setUser(mockUser);
+    localStorage.setItem('vianuvem_user', JSON.stringify(mockUser));
+  };
 
-export interface AuthContextType {
-  user: User | null;
-  login: (email: string, password: string, otp: string) => Promise<void>;
-  logout: () => void;
-  isAuthenticated: boolean;
-}
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('vianuvem_user');
+  };
+
+  const value = {
+    user,
+    login,
+    logout,
+    isAuthenticated: !!user,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
