@@ -7,7 +7,7 @@ import ProcessosPage from '../pages/ProcessosPage';
 import ProcessoDetalhePage from '../pages/ProcessoDetalhePage';
 import NovoProcessoPage from '../pages/NovoProcessoPage';
 import UsuariosPage from '../pages/UsuariosPage';
-
+<BrowserRouter basename="/ModelagemTP1"></BrowserRouter>
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
   return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
