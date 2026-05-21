@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from '../contexts/AuthContext';
 import Layout from '../components/Layout';
 import LoginPage from '../pages/LoginPage';
@@ -7,7 +7,6 @@ import ProcessosPage from '../pages/ProcessosPage';
 import ProcessoDetalhePage from '../pages/ProcessoDetalhePage';
 import NovoProcessoPage from '../pages/NovoProcessoPage';
 import UsuariosPage from '../pages/UsuariosPage';
-<BrowserRouter basename="/ModelagemTP1"></BrowserRouter>
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
   return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
@@ -74,7 +73,7 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/ModelagemTP1">
       <AuthProvider>
         <AppRoutes />
       </AuthProvider>
