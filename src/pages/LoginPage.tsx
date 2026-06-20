@@ -26,7 +26,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await login(email, password, otp);
-      navigate('/dashboard');
+      navigate('/telainicial');
     } catch (error) {
       alert('Erro ao fazer login. Verifique suas credenciais.');
     } finally {
@@ -56,7 +56,7 @@ export default function LoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    className="w-full px-1 py-2 border border-gray-300 rounded-md"
                   />
                 </div>
 
@@ -69,13 +69,17 @@ export default function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    className="w-full px-1 py-2 border border-gray-300 rounded-md"
                   />
                 </div>
-
-                <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">
-                  Continuar
-                </button>
+<div className="flex justify-center">
+  <button
+    type="submit"
+    className="w-64 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
+  >
+    Continuar
+  </button>
+</div>
               </>
             ) : (
               <>
@@ -123,12 +127,9 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-6 text-center text-sm text-gray-500">
-            <p>Use qualquer email de teste:</p>
+            <p></p>
             <p className="mt-1 text-xs">
-              admin@test.com, vendedor@test.com, gerente@test.com
-            </p>
-            <p className="text-xs text-gray-400 mt-2">
-              OTP: qualquer código de 6 dígitos
+              
             </p>
           </div>
         </div>

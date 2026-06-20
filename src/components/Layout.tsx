@@ -25,13 +25,13 @@ export default function Layout({ children }: LayoutProps) {
   const menuItems = [
     {
       icon: LayoutDashboard,
-      label: 'Dashboard',
-      path: '/dashboard',
+      label: 'Tela Inicial',
+      path: '/telainicial',
       roles: ['administrador', 'vendedor', 'gerente', 'financeiro', 'usados', 'secretaria', 'liberacao', 'diretoria'],
     },
     {
       icon: FileText,
-      label: 'Processos',
+      label: 'Pesquisar Processo',
       path: '/processos',
       roles: ['administrador', 'vendedor', 'gerente', 'financeiro', 'usados', 'secretaria', 'liberacao', 'diretoria'],
     },

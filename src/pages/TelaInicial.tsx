@@ -31,7 +31,7 @@ const statusLabels: Record<string, string> = {
   reprovado: 'Reprovado',
 };
 
-export default function DashboardPage() {
+export default function TelaInicialPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -43,32 +43,25 @@ export default function DashboardPage() {
 
   const stats = [
     {
-      label: 'Total de Processos',
+      label: 'Processos que atuo',
       value: meusProcessos.length,
       icon: FileText,
       color: 'text-blue-600',
       bgColor: 'bg-blue-50',
     },
     {
-      label: 'Em Andamento',
+      label: 'Processos Em Andamento',
       value: meusProcessos.filter(p => !['aprovado', 'reprovado'].includes(p.status)).length,
       icon: Clock,
       color: 'text-yellow-600',
       bgColor: 'bg-yellow-50',
     },
     {
-      label: 'Aprovados',
+      label: 'Processos Finalizados',
       value: meusProcessos.filter(p => p.status === 'aprovado').length,
       icon: CheckCircle2,
       color: 'text-green-600',
       bgColor: 'bg-green-50',
-    },
-    {
-      label: 'Valor Total',
-      value: `R$ ${(meusProcessos.reduce((acc, p) => acc + p.valor, 0) / 1000).toFixed(0)}k`,
-      icon: DollarSign,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-50',
     },
   ];
 
@@ -130,14 +123,6 @@ export default function DashboardPage() {
             <div className="text-center py-12">
               <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-600">Nenhum processo encontrado</p>
-              {['vendedor', 'administrador'].includes(user?.role || '') && (
-                <button
-                  className="mt-4 border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-50"
-                  onClick={() => navigate('/processos/novo')}
-                >
-                  Criar Primeiro Processo
-                </button>
-              )}
             </div>
           ) : (
             processosRecentes.map((processo) => (

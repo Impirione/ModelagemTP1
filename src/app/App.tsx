@@ -2,11 +2,11 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from '../contexts/AuthContext';
 import Layout from '../components/Layout';
 import LoginPage from '../pages/LoginPage';
-import DashboardPage from '../pages/DashboardPage';
 import ProcessosPage from '../pages/ProcessosPage';
 import ProcessoDetalhePage from '../pages/ProcessoDetalhePage';
 import NovoProcessoPage from '../pages/NovoProcessoPage';
 import UsuariosPage from '../pages/UsuariosPage';
+import TelaInicialPage from '../pages/TelaInicial';
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
   return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
@@ -17,11 +17,11 @@ function AppRoutes() {
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route
-        path="/dashboard"
+        path="/telainicial"
         element={
           <ProtectedRoute>
             <Layout>
-              <DashboardPage />
+              <TelaInicialPage />
             </Layout>
           </ProtectedRoute>
         }
@@ -66,7 +66,7 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      <Route path="/" element={<Navigate to="/dashboard" />} />
+      <Route path="/" element={<Navigate to="/telainicial" />} />
     </Routes>
   );
 }
