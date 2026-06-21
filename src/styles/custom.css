@@ -764,3 +764,15 @@ input:focus, select:focus, textarea:focus {
     display: none;
   }
 }
+
+.bg-slate-100 {
+  background-color: #f1f5f9;
+}
+
+.hover\:bg-slate-700:hover {
+  background-color: #334155;
+}
+
+.hover\:text-white:hover {
+  color: white;
+}
