@@ -5,25 +5,21 @@ import { mockProcessos } from '../data/mockData';
 import { Plus, Search, Filter } from 'lucide-react';
 
 const statusColors: Record<string, string> = {
-  rascunho: 'bg-gray-500',
+  aguardando_vendedor: 'bg-gray-500',
   aguardando_gerente: 'bg-yellow-500',
   aguardando_financeiro: 'bg-blue-500',
   aguardando_usados: 'bg-purple-500',
   aguardando_secretaria: 'bg-orange-500',
   aguardando_liberacao: 'bg-indigo-500',
-  aprovado: 'bg-green-500',
-  reprovado: 'bg-red-500',
 };
 
 const statusLabels: Record<string, string> = {
-  rascunho: 'Rascunho',
+  aguardando_vendedor: 'Aguardando Vendedor',
   aguardando_gerente: 'Aguardando Gerente',
   aguardando_financeiro: 'Aguardando Financeiro',
   aguardando_usados: 'Aguardando Usados',
   aguardando_secretaria: 'Aguardando Secretaria',
   aguardando_liberacao: 'Aguardando Liberação',
-  aprovado: 'Aprovado',
-  reprovado: 'Reprovado',
 };
 
 export default function ProcessosPage() {
@@ -80,10 +76,10 @@ export default function ProcessosPage() {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <input
-              placeholder="Buscar por cliente, CPF ou ID..."
+              placeholder="           Buscar por cliente, CPF ou Processo"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 px-3 py-2 border border-gray-300 rounded-md"
+              className="w-90 max-w-full px-3 py-2 border border-gray-300 rounded-md"
             />
           </div>
 
@@ -98,15 +94,6 @@ export default function ProcessosPage() {
             ))}
           </select>
 
-          <select 
-            value={filterTipo} 
-            onChange={(e) => setFilterTipo(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-md"
-          >
-            <option value="todos">Todos os Tipos</option>
-            <option value="venda">Venda</option>
-            <option value="compra">Compra</option>
-          </select>
         </div>
       </div>
 
