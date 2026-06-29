@@ -171,7 +171,7 @@ export default function TelaInicialPage() {
                   </div>
 
                   <div>
-                    coluna 3 linha 1
+                    {processo.status}
                   </div>
 
                   <div>

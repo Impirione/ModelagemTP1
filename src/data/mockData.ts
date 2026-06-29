@@ -142,7 +142,7 @@ export const mockProcessos: Processo[] = [
       ativo: true,
       createdAt: new Date('2024-01-01:10:12:22'),
     },
-    status: 'aprovado',
+    status: 'aguardando_secretaria',
     documentos: [],
     aprovacoes: [
       {

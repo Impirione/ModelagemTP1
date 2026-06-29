@@ -20,19 +20,16 @@ const statusColors: Record<string, string> = {
   aguardando_usados: 'bg-purple-500',
   aguardando_secretaria: 'bg-orange-500',
   aguardando_liberacao: 'bg-indigo-500',
-  aprovado: 'bg-green-500',
-  reprovado: 'bg-red-500',
+  Finzalido: 'bg-green-500',
 };
 
 const statusLabels: Record<string, string> = {
-  rascunho: 'Rascunho',
   aguardando_gerente: 'Aguardando Gerente',
   aguardando_financeiro: 'Aguardando Financeiro',
   aguardando_usados: 'Aguardando Usados',
   aguardando_secretaria: 'Aguardando Secretaria',
   aguardando_liberacao: 'Aguardando Liberação',
-  aprovado: 'Aprovado',
-  reprovado: 'Reprovado',
+  finalizado: 'Finalizado',
 };
 
 const documentTypeLabels: Record<string, string> = {
