@@ -138,9 +138,11 @@ export default function TelaInicialPage() {
 
                   {/* Linha 1 */}
                   <div>
-                    <h3 className="font-semibold text-gray-900">
+                    <span className="font-semibold text-gray-900">
                       {processo.id}
-                    </h3>
+                    </span>
+                    <h6></h6>
+
                   </div>
 
                   {/* ===================== COLUNA 2 ===================== */}
