@@ -1,23 +1,36 @@
+import WorkflowVendedor from "../components/WorkflowVendedor";
+import WorkflowGerente from "../components/WorkflowGerente";
+import WorkflowUsados from "../components/WorkflowUsados";
+import WorkflowFinanceiro from "../components/WorkflowFinanceiro";
+import WorkflowSecretaria from "../components/WorkflowSecretaria";
+import WorkflowLiberacao from "../components/WorkflowLiberacao";
+import WorkflowEntrega from "../components/WorkflowEntrega";
+import WorkflowPendencia from "../components/WorkflowPendencia";
+import WorkflowFinalizado from "../components/WorkflowFinalizado";
 import { useAuth } from '../contexts/AuthContext';
 import { mockProcessos } from '../data/mockData';
 import { useNavigate } from 'react-router';
 import {
-  FileText,
   Clock,
   CheckCircle2,
-  DollarSign,
   Plus,
+  FileText,
+  FilePlus,
+  FolderOpen,
+  MoreVertical,
+  Pencil,
+  Trash2,
+  Settings,
 } from 'lucide-react';
+import { Processo } from '../types';
 
 const statusColors: Record<string, string> = {
-  rascunho: 'bg-gray-500',
   aguardando_gerente: 'bg-yellow-500',
   aguardando_financeiro: 'bg-blue-500',
   aguardando_usados: 'bg-purple-500',
   aguardando_secretaria: 'bg-orange-500',
   aguardando_liberacao: 'bg-indigo-500',
-  aprovado: 'bg-green-500',
-  reprovado: 'bg-red-500',
+  finalizado: 'bg-green-500',
 };
 
 const statusLabels: Record<string, string> = {
@@ -26,13 +39,46 @@ const statusLabels: Record<string, string> = {
   aguardando_usados: 'Aguardando Usados',
   aguardando_secretaria: 'Aguardando Secretaria',
   aguardando_liberacao: 'Aguardando Liberação',
-  aprovado: 'Aprovado',
-  reprovado: 'Reprovado',
+  finalizado: 'Encerrado',
 };
 
 export default function TelaInicialPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  const renderAcoes = (processo: Processo) => {
+  switch (processo.status) {
+    case 'aguardando_vendedor':
+      return <WorkflowVendedor processo={processo} />;
+
+    case 'aguardando_gerente':
+      return <Workflow processo={processo} />;
+
+    case 'aguardando_usados':
+      return <WorkflowUsados processo={processo} />;
+
+    case 'aguardando_financeiro':
+      return <WorkflowFinanceiro processo={processo} />;
+
+    case 'aguardando_secretaria':
+      return <WorkflowSecretaria processo={processo} />;
+
+    case 'aguardando_liberacao':
+      return <WorkflowLiberacao processo={processo} />;
+
+    case 'aguardando_entrega':
+      return <WorkflowEntrega processo={processo} />;
+
+    case 'pendencia':
+      return <WorkflowPendencia processo={processo} />;
+
+    case 'finalizado':
+      return <WorkflowFinalizado />;
+
+    default:
+      return null;
+  }
+};
 
   const meusProcessos = mockProcessos.filter(p =>
     user?.role === 'vendedor' ? p.vendedor.id === user.id : true
@@ -223,11 +269,70 @@ export default function TelaInicialPage() {
 
 
                   <div>
-                    coluna 3 linha2
+                    <div className="flex items-center gap-3">
+
+                      {/* Adicionar documentos */}
+                      <button
+                        type="button"
+                        title="Adicionar documentos"
+                        className="w-10 h-10 rounded-full bg-blue-100 hover:bg-blue-200 border border-blue-300 flex items-center justify-center"
+                      >
+                        <FilePlus size={18} className="text-blue-700" />
+                      </button>
+
+                      {/* Visualizar documentos */}
+                      <button
+                        type="button"
+                        title="Visualizar documentos"
+                        className="w-10 h-10 rounded-full bg-green-100 hover:bg-green-200 border border-green-300 flex items-center justify-center"
+                      >
+                        <FolderOpen size={18} className="text-green-700" />
+                      </button>
+
+                      {/* Menu */}
+                      <div className="relative group">
+
+                        <button
+                          className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 border border-gray-300 flex items-center justify-center"
+                        >
+                          <MoreVertical size={18} />
+                        </button>
+
+                        <div className="absolute right-0 mt-2 w-52 bg-white border rounded-lg shadow-lg hidden group-hover:block z-50">
+
+                          <button
+                            className="w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center gap-2"
+                          >
+                            <Settings size={16} />
+                            Editar Indexadores
+                          </button>
+
+                          <button
+                            className="w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center gap-2"
+                          >
+                            <Pencil size={16} />
+                            Editar Processo
+                          </button>
+
+                          {/* Apenas administrador */}
+                          {user.role === 'administrador' && (
+                            <button
+                              className="w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 flex items-center gap-2"
+                            >
+                              <Trash2 size={16} />
+                              Excluir Processo
+                            </button>
+                          )}
+
+                        </div>
+
+                      </div>
+
+                    </div>
                   </div>
 
                   <div>
-                    COLUNA 4 LINMHA2
+                    {renderAcoes(processo)}
                   </div>
 
                 </div>

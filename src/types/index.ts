@@ -14,7 +14,10 @@ export type ProcessStatus =
   | 'aguardando_usados'
   | 'aguardando_secretaria'
   | 'aguardando_liberacao'
-  | 'finalizado'
+  | 'aguardando_vendedor'
+  | 'aguardando_entrega'
+  | 'pendencia'
+  | 'finalizado';
 
 export type DocumentType =
   | 'proposta'
