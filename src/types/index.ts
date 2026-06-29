@@ -9,14 +9,12 @@ export type UserRole =
   | 'diretoria';
 
 export type ProcessStatus =
-  | 'rascunho'
   | 'aguardando_gerente'
   | 'aguardando_financeiro'
   | 'aguardando_usados'
   | 'aguardando_secretaria'
   | 'aguardando_liberacao'
-  | 'aprovado'
-  | 'reprovado';
+  | 'finalizado'
 
 export type DocumentType =
   | 'proposta'

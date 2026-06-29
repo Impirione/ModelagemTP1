@@ -57,7 +57,7 @@ export default function TelaInicialPage() {
     },
     {
       label: 'Processos Finalizados',
-      value: meusProcessos.filter(p => p.status === 'aprovado').length,
+      value: meusProcessos.filter(p => p.status === 'finalizado').length,
       icon: CheckCircle2,
       color: 'text-green-600',
       bgColor: 'bg-green-50',
