@@ -21,7 +21,6 @@ const statusColors: Record<string, string> = {
 };
 
 const statusLabels: Record<string, string> = {
-  rascunho: 'Rascunho',
   aguardando_gerente: 'Aguardando Gerente',
   aguardando_financeiro: 'Aguardando Financeiro',
   aguardando_usados: 'Aguardando Usados',
@@ -76,8 +75,8 @@ export default function TelaInicialPage() {
           </p>
         </div>
         {['vendedor', 'administrador'].includes(user?.role || '') && (
-          <button 
-            onClick={() => navigate('/processos/novo')} 
+          <button
+            onClick={() => navigate('/processos/novo')}
             className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
           >
             <Plus className="h-4 w-4" />
@@ -86,7 +85,7 @@ export default function TelaInicialPage() {
         )}
       </div>
 
-      {/* Stats */}
+      {/* Status */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat) => {
           const Icon = stat.icon;
@@ -106,11 +105,11 @@ export default function TelaInicialPage() {
         })}
       </div>
 
-      {/* Recent Processes */}
+      {/* processos recentes*/}
       <div className="bg-white p-6 rounded-lg shadow">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-gray-900">Processos Recentes</h2>
-          <button 
+          <button
             onClick={() => navigate('/processos')}
             className="border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-50"
           >
@@ -128,36 +127,109 @@ export default function TelaInicialPage() {
             processosRecentes.map((processo) => (
               <div
                 key={processo.id}
-                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+                className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
                 onClick={() => navigate(`/processos/${processo.id}`)}
               >
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h3 className="font-semibold text-gray-900">{processo.cliente.nome}</h3>
-                    <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded capitalize">
-                      {processo.tipo}
-                    </span>
+
+                {/* GRID 4 COLUNAS */}
+                <div className="grid grid-cols-4 gap-x-8 gap-y-3">
+
+                  {/* ===================== COLUNA 1 ===================== */}
+
+                  {/* Linha 1 */}
+                  <div>
+                    <h3 className="font-semibold text-gray-900">
+                      {processo.id}
+                    </h3>
                   </div>
-                  <div className="flex items-center gap-4 text-sm text-gray-600">
-                    <span>{processo.veiculoNovo?.marca} {processo.veiculoNovo?.modelo || processo.veiculoUsado?.modelo}</span>
-                    <span>•</span>
-                    <span>Vendedor: {processo.vendedor.nome}</span>
+
+                  {/* ===================== COLUNA 2 ===================== */}
+
+                  {/* Linha 1 */}
+                  <div>
+                    <div className="flex gap-2">
+                      <span className="text-blue-700 text-xs">
+                        {processo.tipoVeiculo === 'novo'
+                          ? '🚗 Novo ➜'
+                          : '🚙 Seminovo ➜'}
+                      </span>
+
+                      <span className="text-green-700 text-xs">
+                        {processo.tipoCliente === 'fisica'
+                          ? '👤 Física ➜'
+                          : '🏢 Jurídica ➜'}
+                      </span>
+
+                      <span className="text-xs">
+                        {processo.possuiUsado
+                          ? '🔄 Com Usado'
+                          : '✨ Sem Usado'}
+                      </span>
+                    </div>
                   </div>
+
+                  <div>
+                    coluna 3 linha 1
+                  </div>
+
+                  <div>
+                    coluna 4 linha 1
+                  </div>
+
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-black">Usuário: </span>
+                      <span className="text-gray-600">{processo.vendedor.nome}</span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-black">Data: </span>
+                      <span className="text-xs text-gray-600">{processo.createdAt.toLocaleString('pt-BR')}</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <p className="text-xs text-gray-600">
+                      Cliente: {processo.cliente.nome}
+                    </p>
+
+                    <p className="text-xs text-gray-600">
+                      {processo.tipoCliente === 'fisica'
+                        ? 'CPF'
+                        : 'CNPJ'}:
+                      {' '}
+                      {processo.cliente.cpf || processo.cliente.cnpj}
+                    </p>
+                    <p className="text-xs text-gray-600">
+                      Chassi:
+                      {' '}
+                      {(processo.veiculoNovo?.chassi ||
+                        processo.veiculoUsado?.chassi)?.slice(-7)}
+                    </p>
+
+                    {processo.possuiUsado && (
+                      <p className="text-xs text-gray-600">
+                        Placa: {processo.veiculoUsado?.placa}
+                      </p>
+                    )}
+
+                    <p className="text-xs text-gray-600">
+                      Nº Proposta: {processo.proposta}
+                    </p>
+
+                  </div>
+
+
+                  <div>
+                    coluna 3 linha2
+                  </div>
+
+                  <div>
+                    COLUNA 4 LINMHA2
+                  </div>
+
                 </div>
 
-                <div className="flex items-center gap-4">
-                  <div className="text-right">
-                    <p className="font-semibold text-gray-900">
-                      R$ {processo.valor.toLocaleString('pt-BR')}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      {new Date(processo.createdAt).toLocaleDateString('pt-BR')}
-                    </p>
-                  </div>
-                  <span className={`px-3 py-1 text-white text-sm rounded ${statusColors[processo.status]}`}>
-                    {statusLabels[processo.status]}
-                  </span>
-                </div>
               </div>
             ))
           )}

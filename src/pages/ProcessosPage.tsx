@@ -45,10 +45,6 @@ export default function ProcessosPage() {
     processos = processos.filter(p => p.status === filterStatus);
   }
 
-  if (filterTipo !== 'todos') {
-    processos = processos.filter(p => p.tipo === filterTipo);
-  }
-
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -124,12 +120,12 @@ export default function ProcessosPage() {
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-3">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      {processo.cliente.nome}
+                     <h3 className="text-lg font-semibold text-gray-900">
+                      {processo.id}
                     </h3>
-                    <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded capitalize">
-                      {processo.tipo}
-                    </span>
+                    <h2 className="text-lg font-semibold text-gray-900">
+                      {processo.vendedor.nome}
+                    </h2>
                     <span className={`px-3 py-1 text-white text-sm rounded ${statusColors[processo.status]}`}>
                       {statusLabels[processo.status]}
                     </span>
@@ -142,9 +138,7 @@ export default function ProcessosPage() {
                     </div>
                     <div>
                       <p className="text-gray-500">Veículo</p>
-                      <p className="font-medium text-gray-900">
-                        {processo.veiculoNovo?.marca} {processo.veiculoNovo?.modelo || processo.veiculoUsado?.modelo}
-                      </p>
+
                     </div>
                     <div>
                       <p className="text-gray-500">Vendedor</p>
@@ -154,9 +148,6 @@ export default function ProcessosPage() {
                 </div>
 
                 <div className="text-right ml-4">
-                  <p className="text-2xl font-bold text-gray-900">
-                    R$ {processo.valor.toLocaleString('pt-BR')}
-                  </p>
                   <p className="text-sm text-gray-500 mt-1">
                     {new Date(processo.createdAt).toLocaleDateString('pt-BR')}
                   </p>

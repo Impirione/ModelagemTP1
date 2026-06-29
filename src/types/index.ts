@@ -8,8 +8,6 @@ export type UserRole =
   | 'liberacao'
   | 'diretoria';
 
-export type ProcessType = 'venda' | 'compra';
-
 export type ProcessStatus =
   | 'rascunho'
   | 'aguardando_gerente'
@@ -41,22 +39,17 @@ export interface User {
 export interface Cliente {
   id: string;
   nome: string;
-  cpf: string;
-  telefone: string;
-  email: string;
-  endereco: string;
+  cpf?: string;
+  cnpj?: string
 }
 
 export interface Veiculo {
   id: string;
-  marca: string;
-  modelo: string;
-  ano: number;
-  placa: string;
+  placa?: string;
   chassi: string;
-  cor: string;
   tipo: 'novo' | 'usado';
 }
+
 
 export interface Documento {
   id: string;
@@ -80,15 +73,21 @@ export interface Aprovacao {
 
 export interface Processo {
   id: string;
-  tipo: ProcessType;
+
+  tipoVeiculo: 'novo' | 'seminovo';
+  tipoCliente: 'fisica' | 'juridica';
+  possuiUsado: boolean;
+  
   cliente: Cliente;
   veiculoNovo?: Veiculo;
   veiculoUsado?: Veiculo;
   vendedor: User;
-  valor: number;
+  proposta: string;
+
   status: ProcessStatus;
   documentos: Documento[];
   aprovacoes: Aprovacao[];
+
   createdAt: Date;
   updatedAt: Date;
 }

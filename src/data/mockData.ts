@@ -3,33 +3,26 @@ import { Processo, User } from '../types';
 export const mockProcessos: Processo[] = [
   {
     id: '1',
-    tipo: 'venda',
+
+    tipoVeiculo: 'novo',
+    tipoCliente: 'juridica',
+    possuiUsado: true,
+    proposta: '789456',
+
     cliente: {
       id: 'c1',
-      nome: 'João Silva',
-      cpf: '123.456.789-00',
-      telefone: '(11) 98765-4321',
-      email: 'joao@email.com',
-      endereco: 'Rua A, 123, São Paulo - SP',
+      nome: 'EA Construção LTDA',
+      cnpj: '90.588.080/0001-30',
     },
     veiculoNovo: {
       id: 'v1',
-      marca: 'Toyota',
-      modelo: 'Corolla',
-      ano: 2024,
-      placa: 'ABC1D23',
       chassi: '9BWZZZ377VT004251',
-      cor: 'Prata',
       tipo: 'novo',
     },
     veiculoUsado: {
       id: 'v2',
-      marca: 'Chevrolet',
-      modelo: 'Onix',
-      ano: 2019,
       placa: 'XYZ9W87',
       chassi: '9BGRD48X0JG123456',
-      cor: 'Branco',
       tipo: 'usado',
     },
     vendedor: {
@@ -38,9 +31,8 @@ export const mockProcessos: Processo[] = [
       email: 'carlos@vianuvem.com',
       role: 'vendedor',
       ativo: true,
-      createdAt: new Date('2024-01-01'),
+      createdAt: new Date('2024-01-01:08:12:55'),
     },
-    valor: 85000,
     status: 'aguardando_gerente',
     documentos: [
       {
@@ -50,7 +42,7 @@ export const mockProcessos: Processo[] = [
         nome: 'Proposta_Corolla_Joao.pdf',
         url: '#',
         uploadedBy: 'Carlos Vendedor',
-        uploadedAt: new Date('2024-05-15'),
+        uploadedAt: new Date('2024-05-15:09:54:02'),
       },
       {
         id: 'd2',
@@ -59,7 +51,7 @@ export const mockProcessos: Processo[] = [
         nome: 'RG_Joao.pdf',
         url: '#',
         uploadedBy: 'Carlos Vendedor',
-        uploadedAt: new Date('2024-05-15'),
+        uploadedAt: new Date('2024-05-15:12:02:55'),
       },
     ],
     aprovacoes: [
@@ -71,28 +63,26 @@ export const mockProcessos: Processo[] = [
         status: 'pendente',
       },
     ],
-    createdAt: new Date('2024-05-15'),
-    updatedAt: new Date('2024-05-15'),
+    createdAt: new Date('2024-05-15:12:55:02'),
+    updatedAt: new Date('2024-05-15:14:15:02'),
   },
   {
     id: '2',
-    tipo: 'compra',
+
+    tipoVeiculo: 'seminovo',
+    tipoCliente: 'fisica',
+    possuiUsado: false,
+    proposta: '123456',
+
     cliente: {
       id: 'c2',
       nome: 'Maria Santos',
       cpf: '987.654.321-00',
-      telefone: '(11) 91234-5678',
-      email: 'maria@email.com',
-      endereco: 'Av. B, 456, São Paulo - SP',
     },
     veiculoUsado: {
       id: 'v3',
-      marca: 'Honda',
-      modelo: 'Civic',
-      ano: 2020,
       placa: 'DEF5G67',
       chassi: '19XFC2F59LE123456',
-      cor: 'Preto',
       tipo: 'usado',
     },
     vendedor: {
@@ -101,9 +91,8 @@ export const mockProcessos: Processo[] = [
       email: 'ana@vianuvem.com',
       role: 'vendedor',
       ativo: true,
-      createdAt: new Date('2024-01-01'),
+      createdAt: new Date('2024-01-01:17:15:02'),
     },
-    valor: 45000,
     status: 'aguardando_financeiro',
     documentos: [],
     aprovacoes: [
@@ -114,7 +103,7 @@ export const mockProcessos: Processo[] = [
         role: 'gerente',
         status: 'aprovado',
         observacao: 'Aprovado conforme política comercial',
-        dataAprovacao: new Date('2024-05-16'),
+        dataAprovacao: new Date('2024-05-16:17:55:03'),
       },
       {
         id: 'a3',
@@ -124,28 +113,25 @@ export const mockProcessos: Processo[] = [
         status: 'pendente',
       },
     ],
-    createdAt: new Date('2024-05-14'),
-    updatedAt: new Date('2024-05-16'),
+    createdAt: new Date('2024-05-14:15:02:14'),
+    updatedAt: new Date('2024-05-16:15:16:02'),
   },
   {
     id: '3',
-    tipo: 'venda',
+
+    tipoVeiculo: 'novo',
+    tipoCliente: 'fisica',
+    possuiUsado: false,
+    proposta: '456753',
+
     cliente: {
       id: 'c3',
       nome: 'Pedro Oliveira',
       cpf: '456.789.123-00',
-      telefone: '(11) 99876-5432',
-      email: 'pedro@email.com',
-      endereco: 'Rua C, 789, São Paulo - SP',
     },
     veiculoNovo: {
       id: 'v4',
-      marca: 'Volkswagen',
-      modelo: 'T-Cross',
-      ano: 2024,
-      placa: 'GHI2J34',
       chassi: 'WVW1K1AJ5LW123456',
-      cor: 'Azul',
       tipo: 'novo',
     },
     vendedor: {
@@ -154,9 +140,8 @@ export const mockProcessos: Processo[] = [
       email: 'carlos@vianuvem.com',
       role: 'vendedor',
       ativo: true,
-      createdAt: new Date('2024-01-01'),
+      createdAt: new Date('2024-01-01:10:12:22'),
     },
-    valor: 120000,
     status: 'aprovado',
     documentos: [],
     aprovacoes: [
@@ -166,7 +151,7 @@ export const mockProcessos: Processo[] = [
         aprovador: 'Roberto Gerente',
         role: 'gerente',
         status: 'aprovado',
-        dataAprovacao: new Date('2024-05-10'),
+        dataAprovacao: new Date('2024-05-10:14:20:59'),
       },
       {
         id: 'a5',
@@ -174,11 +159,11 @@ export const mockProcessos: Processo[] = [
         aprovador: 'Paula Financeiro',
         role: 'financeiro',
         status: 'aprovado',
-        dataAprovacao: new Date('2024-05-11'),
+        dataAprovacao: new Date('2024-05-11:15:01:55'),
       },
     ],
-    createdAt: new Date('2024-05-09'),
-    updatedAt: new Date('2024-05-11'),
+    createdAt: new Date('2024-05-09:14:25:01'),
+    updatedAt: new Date('2024-05-11:14:28:06'),
   },
 ];
 
@@ -189,7 +174,7 @@ export const mockUsers: User[] = [
     email: 'carlos@vianuvem.com',
     role: 'vendedor',
     ativo: true,
-    createdAt: new Date('2024-01-01'),
+    createdAt: new Date('2024-01-01:15:05:14'),
   },
   {
     id: 'u2',
@@ -197,7 +182,7 @@ export const mockUsers: User[] = [
     email: 'ana@vianuvem.com',
     role: 'vendedor',
     ativo: true,
-    createdAt: new Date('2024-01-01'),
+    createdAt: new Date('2024-01-01:14:20:23'),
   },
   {
     id: 'u3',
@@ -205,7 +190,7 @@ export const mockUsers: User[] = [
     email: 'roberto@vianuvem.com',
     role: 'gerente',
     ativo: true,
-    createdAt: new Date('2024-01-01'),
+    createdAt: new Date('2024-01-01:14:59:01'),
   },
   {
     id: 'u4',
@@ -213,7 +198,7 @@ export const mockUsers: User[] = [
     email: 'paula@vianuvem.com',
     role: 'financeiro',
     ativo: true,
-    createdAt: new Date('2024-01-01'),
+    createdAt: new Date('2024-01-01:20:20:14'),
   },
   {
     id: 'u5',
@@ -221,6 +206,6 @@ export const mockUsers: User[] = [
     email: 'admin@vianuvem.com',
     role: 'administrador',
     ativo: true,
-    createdAt: new Date('2024-01-01'),
+    createdAt: new Date('2024-01-01:07:20:23'),
   },
 ];

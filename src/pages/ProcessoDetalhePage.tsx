@@ -15,7 +15,6 @@ import {
 } from 'lucide-react';
 
 const statusColors: Record<string, string> = {
-  rascunho: 'bg-gray-500',
   aguardando_gerente: 'bg-yellow-500',
   aguardando_financeiro: 'bg-blue-500',
   aguardando_usados: 'bg-purple-500',
@@ -161,18 +160,6 @@ export default function ProcessoDetalhePage() {
                         <p className="text-gray-500">CPF</p>
                         <p className="font-medium">{processo.cliente.cpf}</p>
                       </div>
-                      <div>
-                        <p className="text-gray-500">Telefone</p>
-                        <p className="font-medium">{processo.cliente.telefone}</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-500">Email</p>
-                        <p className="font-medium">{processo.cliente.email}</p>
-                      </div>
-                      <div className="col-span-2">
-                        <p className="text-gray-500">Endereço</p>
-                        <p className="font-medium">{processo.cliente.endereco}</p>
-                      </div>
                     </div>
                   </div>
 
@@ -184,21 +171,10 @@ export default function ProcessoDetalhePage() {
                         <h3 className="text-lg font-semibold">Veículo Novo</h3>
                       </div>
                       <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <p className="text-gray-500">Marca/Modelo</p>
-                          <p className="font-medium">{processo.veiculoNovo.marca} {processo.veiculoNovo.modelo}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-500">Ano</p>
-                          <p className="font-medium">{processo.veiculoNovo.ano}</p>
-                        </div>
+
                         <div>
                           <p className="text-gray-500">Placa</p>
                           <p className="font-medium">{processo.veiculoNovo.placa}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-500">Cor</p>
-                          <p className="font-medium">{processo.veiculoNovo.cor}</p>
                         </div>
                         <div className="col-span-2">
                           <p className="text-gray-500">Chassi</p>
@@ -216,20 +192,8 @@ export default function ProcessoDetalhePage() {
                       </div>
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
-                          <p className="text-gray-500">Marca/Modelo</p>
-                          <p className="font-medium">{processo.veiculoUsado.marca} {processo.veiculoUsado.modelo}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-500">Ano</p>
-                          <p className="font-medium">{processo.veiculoUsado.ano}</p>
-                        </div>
-                        <div>
                           <p className="text-gray-500">Placa</p>
                           <p className="font-medium">{processo.veiculoUsado.placa}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-500">Cor</p>
-                          <p className="font-medium">{processo.veiculoUsado.cor}</p>
                         </div>
                       </div>
                     </div>
@@ -334,16 +298,6 @@ export default function ProcessoDetalhePage() {
           <div className="bg-white p-6 rounded-lg shadow">
             <h3 className="text-lg font-semibold mb-4">Resumo</h3>
             <div className="space-y-4">
-              <div>
-                <p className="text-sm text-gray-500">Valor Total</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  R$ {processo.valor.toLocaleString('pt-BR')}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Tipo</p>
-                <p className="font-medium capitalize">{processo.tipo}</p>
-              </div>
               <div>
                 <p className="text-sm text-gray-500">Vendedor</p>
                 <p className="font-medium">{processo.vendedor.nome}</p>
