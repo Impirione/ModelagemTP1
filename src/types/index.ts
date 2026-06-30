@@ -32,7 +32,7 @@ export interface User {
   id: string;
   nome: string;
   email: string;
-  role: UserRole;
+  role: UserRole[];
   ativo: boolean;
   createdAt: Date;
 }

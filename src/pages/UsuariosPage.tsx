@@ -20,7 +20,7 @@ export default function UsuariosPage() {
   const [formData, setFormData] = useState({
     nome: '',
     email: '',
-    role: 'vendedor' as UserRole,
+    role: ['vendedor'] as UserRole,
   });
 
   const filteredUsers = mockUsers.filter(u =>
@@ -32,7 +32,7 @@ export default function UsuariosPage() {
     e.preventDefault();
     alert('Usuário criado com sucesso!');
     setIsDialogOpen(false);
-    setFormData({ nome: '', email: '', role: 'vendedor' });
+    setFormData({ nome: '', email: '', roles: ['vendedor'] });
   };
 
   const handleDelete = (userId: string) => {
@@ -84,17 +84,50 @@ export default function UsuariosPage() {
                 />
               </div>
               <div>
-                <label htmlFor="role" className="block text-sm font-medium mb-2">Perfil</label>
-                <select
-                  value={formData.role}
-                  onChange={(e) => setFormData({ ...formData, role: e.target.value as UserRole })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                >
+              <label className="block text-sm font-medium mb-2">
+                  Perfis
+              </label>
+
+              <div className="space-y-2">
                   {Object.entries(roleLabels).map(([value, label]) => (
-                    <option key={value} value={value}>{label}</option>
+                      <label
+                          key={value}
+                          className="flex items-center gap-2"
+                      >
+                          <input
+                              type="checkbox"
+                              checked={formData.roles.includes(value as UserRole)}
+                              onChange={(e) => {
+
+                                  if (e.target.checked) {
+
+                                      setFormData({
+                                          ...formData,
+                                          roles: [
+                                              ...formData.roles,
+                                              value as UserRole
+                                          ]
+                                      });
+
+                                  } else {
+
+                                      setFormData({
+                                          ...formData,
+                                          roles: formData.roles.filter(
+                                              role => role !== value
+                                          )
+                                      });
+
+                                  }
+
+                              }}
+                          />
+
+                          {label}
+                      </label>
                   ))}
-                </select>
               </div>
+          </div>
               <div className="flex gap-3 pt-4">
                 <button 
                   type="button" 
