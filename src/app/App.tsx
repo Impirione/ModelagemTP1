@@ -6,7 +6,7 @@ import ProcessosPage from '../pages/ProcessosPage';
 import ProcessoDetalhePage from '../pages/ProcessoDetalhePage';
 import NovoProcessoPage from '../pages/NovoProcessoPage';
 import UsuariosPage from '../pages/UsuariosPage';
-import TelaInicialPage from '../pages/TelaInicial';
+import TelaInicialPage from '../components/TelaInicial';
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
   return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;

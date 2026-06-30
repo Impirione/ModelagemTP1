@@ -4,7 +4,7 @@ interface Props {
   processo: Processo;
 }
 
-function WorkflowVendedor({ processo }: { processo: Processo }) {
+export default function WorkflowVendedor({ processo }: { processo: Processo }) {
 
     return (
         <button

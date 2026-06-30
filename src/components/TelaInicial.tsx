@@ -1,12 +1,12 @@
-import WorkflowVendedor from "../components/WorkflowVendedor";
-import WorkflowGerente from "../components/WorkflowGerente";
-import WorkflowUsados from "../components/WorkflowUsados";
-import WorkflowFinanceiro from "../components/WorkflowFinanceiro";
-import WorkflowSecretaria from "../components/WorkflowSecretaria";
-import WorkflowLiberacao from "../components/WorkflowLiberacao";
-import WorkflowEntrega from "../components/WorkflowEntrega";
-import WorkflowPendencia from "../components/WorkflowPendencia";
-import WorkflowFinalizado from "../components/WorkflowFinalizado";
+import WorkflowVendedor from "./WorkflowVendedor";
+import WorkflowGerente from "./WorkflowGerente";
+import WorkflowUsados from "./WorkflowUsados";
+import WorkflowFinanceiro from "./WorkflowFinanceiro";
+import WorkflowSecretaria from "./WorkflowSecretaria";
+import WorkflowLiberacao from "./WorkflowLiberacao";
+import WorkflowEntrega from "./WorkflowEntrega";
+import WorkflowPendencia from "./WorkflowPendencia";
+import WorkflowFinalizado from "./WorkflowFinalizado";
 import { useAuth } from '../contexts/AuthContext';
 import { mockProcessos } from '../data/mockData';
 import { useNavigate } from 'react-router';
@@ -52,7 +52,7 @@ export default function TelaInicialPage() {
       return <WorkflowVendedor processo={processo} />;
 
     case 'aguardando_gerente':
-      return <Workflow processo={processo} />;
+      return <WorkflowGerente processo={processo} />;
 
     case 'aguardando_usados':
       return <WorkflowUsados processo={processo} />;
