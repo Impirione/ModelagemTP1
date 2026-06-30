@@ -221,7 +221,7 @@ export default function TelaInicialPage() {
                   </div>
 
                   <div>
-                    coluna 4 linha 1
+                    
                   </div>
 
                   <div>
