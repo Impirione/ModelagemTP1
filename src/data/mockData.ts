@@ -298,7 +298,7 @@ export const mockUsers: User[] = [
   {
     id: 'u9',
     nome: 'Diretora Silva',
-    email: 'diretora@vianuvem.com',
+    email: 'silva@vianuvem.com',
     role: 'diretoria',
     ativo: true,
     createdAt: new Date('2024-01-01T08:00:00'),

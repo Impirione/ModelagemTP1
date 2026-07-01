@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { useAuth } from '../contexts/AuthContext';
 import { mockProcessos } from '../data/mockData';
 import { proximoStatus } from '../components/workflow';
+import { Aprovacao, Processo, ProcessStatus, UserRole } from '../types';
 import {
   ArrowLeft,
   CheckCircle2,
@@ -49,14 +50,45 @@ const documentTypeLabels: Record<string, string> = {
   outros: 'Outros',
 };
 
+function statusParaRole(status: ProcessStatus | null): UserRole | null {
+  switch (status) {
+    case 'aguardando_gerente':
+      return 'gerente';
+    case 'aguardando_usados':
+      return 'usados';
+    case 'aguardando_financeiro':
+      return 'financeiro';
+    case 'aguardando_secretaria':
+      return 'secretaria';
+    case 'aguardando_liberacao':
+      return 'liberacao';
+    case 'aguardando_vendedor':
+      return 'vendedor';
+    default:
+      return null;
+  }
+}
+
+function gerarId(prefixo: string) {
+  return `${prefixo}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
 export default function ProcessoDetalhePage() {
   const { id } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [observacao, setObservacao] = useState('');
   const [activeTab, setActiveTab] = useState('detalhes');
+  const [processoAtual, setProcessoAtual] = useState<Processo | null>(null);
 
-  const processo = mockProcessos.find(p => p.id === id);
+  useEffect(() => {
+    const processoEncontrado = mockProcessos.find(p => p.id === id) ?? null;
+    setProcessoAtual(processoEncontrado);
+    setObservacao('');
+    setActiveTab('detalhes');
+  }, [id]);
+
+  const processo = processoAtual;
   const proximaEtapa = processo ? proximoStatus(processo) : null;
 
   if (!processo) {
@@ -75,6 +107,7 @@ export default function ProcessoDetalhePage() {
 
   const podeAprovar = () => {
     if (!user) return false;
+    if (!processo) return false;
 
     const aprovacaoPendente = processo.aprovacoes.find(
       a => a.role === user.role && a.status === 'pendente'
@@ -84,15 +117,124 @@ export default function ProcessoDetalhePage() {
   };
 
   const handleAprovar = () => {
-    alert('Processo aprovado com sucesso!');
+    if (!user || !processo) return;
+
+    const aprovacaoPendente = processo.aprovacoes.find(
+      a => a.role === user.role && a.status === 'pendente'
+    );
+
+    if (!aprovacaoPendente) {
+      alert('Não há aprovação pendente para o seu perfil.');
+      return;
+    }
+
+    const agora = new Date();
+    const etapaSeguinte = proximoStatus(processo);
+    const roleSeguinte = statusParaRole(etapaSeguinte);
+
+    setProcessoAtual(prev => {
+      if (!prev) return prev;
+
+      const aprovacoesAtualizadas: Aprovacao[] = prev.aprovacoes.map(aprovacao =>
+        aprovacao.id === aprovacaoPendente.id
+          ? {
+              ...aprovacao,
+              status: 'aprovado',
+              observacao: observacao.trim() || undefined,
+              dataAprovacao: agora,
+            }
+          : aprovacao
+      );
+
+      if (roleSeguinte && etapaSeguinte !== 'finalizado') {
+        aprovacoesAtualizadas.push({
+          id: gerarId('apr'),
+          processoId: prev.id,
+          aprovador: 'Pendente',
+          role: roleSeguinte,
+          status: 'pendente',
+          observacao: undefined,
+        });
+      }
+
+      return {
+        ...prev,
+        status: etapaSeguinte ?? 'finalizado',
+        aprovacoes: aprovacoesAtualizadas,
+        logs: [
+          ...prev.logs,
+          {
+            id: gerarId('log'),
+            responsavelUsuario: user.id,
+            acaoRealizada: 'APROVACAO',
+            entidadeAfetada: 'Processo',
+            entidadeId: prev.id,
+            detalhes: `${user.nome} aprovou o processo${etapaSeguinte ? `; próxima etapa: ${statusLabels[etapaSeguinte]}` : ''}`,
+            dataHora: agora,
+          },
+        ],
+        updatedAt: agora,
+      };
+    });
+
+    setObservacao('');
   };
 
   const handleReprovar = () => {
+    if (!user || !processo) return;
+
     if (!observacao.trim()) {
       alert('Por favor, adicione uma observação para reprovar');
       return;
     }
-    alert('Processo reprovado');
+
+    const aprovacaoPendente = processo.aprovacoes.find(
+      a => a.role === user.role && a.status === 'pendente'
+    );
+
+    if (!aprovacaoPendente) {
+      alert('Não há aprovação pendente para o seu perfil.');
+      return;
+    }
+
+    const agora = new Date();
+
+    setProcessoAtual(prev => {
+      if (!prev) return prev;
+
+      const aprovacoesAtualizadas: Aprovacao[] = prev.aprovacoes.map(aprovacao =>
+        aprovacao.id === aprovacaoPendente.id
+          ? {
+              ...aprovacao,
+              status: 'reprovado',
+              motivoReprovacao: observacao.trim(),
+              observacao: observacao.trim(),
+              dataAprovacao: agora,
+            }
+          : aprovacao
+      );
+
+      return {
+        ...prev,
+        status: 'pendencia',
+        aprovacoes: aprovacoesAtualizadas,
+        logs: [
+          ...prev.logs,
+          {
+            id: gerarId('log'),
+            responsavelUsuario: user.id,
+            acaoRealizada: 'REPROVACAO',
+            entidadeAfetada: 'Processo',
+            entidadeId: prev.id,
+            detalhes: `${user.nome} reprovou o processo: ${observacao.trim()}`,
+            dataHora: agora,
+          },
+        ],
+        updatedAt: agora,
+      };
+    });
+
+    setObservacao('');
   };
 
   const handleUpload = () => {
@@ -109,7 +251,7 @@ export default function ProcessoDetalhePage() {
           </button>
           <div>
             <h1 className="text-3xl font-bold text-gray-900">
-              Processo #{processo.id}
+              Processo #{processo.numeroProcesso}
             </h1>
             <p className="text-gray-600 mt-1">{processo.cliente.nome}</p>
           </div>
