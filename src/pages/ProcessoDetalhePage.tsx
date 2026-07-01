@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { useAuth } from '../contexts/AuthContext';
 import { mockProcessos } from '../data/mockData';
+import { proximoStatus } from '../components/workflow';
 import {
   ArrowLeft,
   CheckCircle2,
@@ -15,20 +16,26 @@ import {
 } from 'lucide-react';
 
 const statusColors: Record<string, string> = {
+  aguardando_vendedor: 'bg-gray-500',
   aguardando_gerente: 'bg-yellow-500',
   aguardando_financeiro: 'bg-blue-500',
   aguardando_usados: 'bg-purple-500',
   aguardando_secretaria: 'bg-orange-500',
   aguardando_liberacao: 'bg-indigo-500',
-  Finzalido: 'bg-green-500',
+  aguardando_entrega: 'bg-teal-500',
+  pendencia: 'bg-red-500',
+  finalizado: 'bg-green-500',
 };
 
 const statusLabels: Record<string, string> = {
+  aguardando_vendedor: 'Aguardando Vendedor',
   aguardando_gerente: 'Aguardando Gerente',
   aguardando_financeiro: 'Aguardando Financeiro',
   aguardando_usados: 'Aguardando Usados',
   aguardando_secretaria: 'Aguardando Secretaria',
   aguardando_liberacao: 'Aguardando Liberação',
+  aguardando_entrega: 'Aguardando Entrega',
+  pendencia: 'Pendência',
   finalizado: 'Finalizado',
 };
 
@@ -50,6 +57,7 @@ export default function ProcessoDetalhePage() {
   const [activeTab, setActiveTab] = useState('detalhes');
 
   const processo = mockProcessos.find(p => p.id === id);
+  const proximaEtapa = processo ? proximoStatus(processo) : null;
 
   if (!processo) {
     return (
@@ -274,10 +282,17 @@ export default function ProcessoDetalhePage() {
                               {aprovacao.observacao}
                             </p>
                           )}
-                          {aprovacao.dataAprovacao && (
-                            <p className="text-xs text-gray-500 mt-2">
-                              {new Date(aprovacao.dataAprovacao).toLocaleString('pt-BR')}
-                            </p>
+                          {(aprovacao.status === 'aprovado' || aprovacao.status === 'reprovado') && (
+                            <>
+                              <p className="text-xs text-gray-500 mt-2">
+                                {aprovacao.dataAprovacao.toLocaleString('pt-BR')}
+                              </p>
+                              {aprovacao.status === 'reprovado' && (
+                                <p className="text-sm text-red-700 mt-2 p-2 bg-red-50 rounded">
+                                  Motivo: {aprovacao.motivoReprovacao}
+                                </p>
+                              )}
+                            </>
                           )}
                         </div>
                       </div>
@@ -303,6 +318,12 @@ export default function ProcessoDetalhePage() {
                 <p className="text-sm text-gray-500">Data de Criação</p>
                 <p className="font-medium">
                   {new Date(processo.createdAt).toLocaleDateString('pt-BR')}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Próxima Etapa</p>
+                <p className="font-medium">
+                  {proximaEtapa ? statusLabels[proximaEtapa] : 'Sem próxima etapa'}
                 </p>
               </div>
             </div>
@@ -343,6 +364,29 @@ export default function ProcessoDetalhePage() {
               </div>
             </div>
           )}
+
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h3 className="text-lg font-semibold mb-4">Auditoria</h3>
+            {processo.logs.length === 0 ? (
+              <p className="text-sm text-gray-500">Nenhum log registrado.</p>
+            ) : (
+              <div className="space-y-3">
+                {processo.logs.map((log) => (
+                  <div key={log.id} className="p-3 border border-gray-200 rounded-lg">
+                    <div className="flex items-center justify-between gap-4">
+                      <p className="font-medium text-sm">{log.acaoRealizada}</p>
+                      <p className="text-xs text-gray-500">
+                        {log.dataHora.toLocaleString('pt-BR')}
+                      </p>
+                    </div>
+                    <p className="text-sm text-gray-600 mt-1">
+                      {log.detalhes || log.entidadeAfetada}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

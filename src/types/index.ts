@@ -35,7 +35,7 @@ export interface User {
   id: string;
   nome: string;
   email: string;
-  role: UserRole[];
+  role: UserRole;
   ativo: boolean;
   createdAt: Date;
 }
@@ -44,7 +44,8 @@ export interface Cliente {
   id: string;
   nome: string;
   cpf?: string;
-  cnpj?: string
+  cnpj?: string,
+  tipoCliente: TipoCliente;
 }
 
 export interface Veiculo {
@@ -65,15 +66,37 @@ export interface Documento {
   uploadedAt: Date;
 }
 
-export interface Aprovacao {
+export interface AprovacaoPendente {
   id: string;
   processoId: string;
   aprovador: string;
   role: UserRole;
-  status: 'pendente' | 'aprovado' | 'reprovado';
+  status: 'pendente';
   observacao?: string;
-  dataAprovacao?: Date;
 }
+
+export interface AprovacaoAprovada {
+  id: string;
+  processoId: string;
+  aprovador: string;
+  role: UserRole;
+  status: 'aprovado';
+  observacao?: string;
+  dataAprovacao: Date;
+}
+
+export interface AprovacaoReprovada {
+  id: string;
+  processoId: string;
+  aprovador: string;
+  role: UserRole;
+  status: 'reprovado';
+  motivoReprovacao: string; // RF16: Obrigatório
+  observacao?: string;
+  dataAprovacao: Date;
+}
+
+export type Aprovacao = AprovacaoPendente | AprovacaoAprovada | AprovacaoReprovada;
 
 // RF4
 export interface LogAuditoria {
@@ -106,6 +129,7 @@ export interface Processo {
   status: ProcessStatus;
   documentos: Documento[];
   aprovacoes: Aprovacao[];
+  logs: LogAuditoria[];         // RF4: Rastreamento de ações
 
   createdAt: Date;
   updatedAt: Date;
