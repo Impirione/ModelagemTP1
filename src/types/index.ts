@@ -28,6 +28,9 @@ export type DocumentType =
   | 'nota_fiscal_venda'
   | 'outros';
 
+  export type TipoOperacao = 'compra' | 'venda';
+  export type TipoCliente = 'fisica' | 'juridica';
+
 export interface User {
   id: string;
   nome: string;
@@ -72,18 +75,33 @@ export interface Aprovacao {
   dataAprovacao?: Date;
 }
 
+// RF4
+export interface LogAuditoria {
+  id: string;
+  responsavelUsuario: string;  // userId
+  acaoRealizada: string;       // ex: 'CRIACAO', 'APROVACAO', 'REPROVACAO', 'EXCLUSAO'
+  entidadeAfetada: string;     // ex: 'Processo', 'Documento', 'Usuario'
+  entidadeId: string;
+  detalhes?: string;           // informação adicional opcional
+  dataHora: Date;
+}
+
 export interface Processo {
   id: string;
+  numeroProcesso: string;
 
+  tipoOperacao: TipoOperacao;
   tipoVeiculo: 'novo' | 'seminovo';
-  tipoCliente: 'fisica' | 'juridica';
+  tipoCliente: TipoCliente;
   possuiUsado: boolean;
   
   cliente: Cliente;
   veiculoNovo?: Veiculo;
   veiculoUsado?: Veiculo;
   vendedor: User;
-  proposta: string;
+
+  proposta: string;             // número/referência da proposta no sistema NBS
+  contratoNBSVinc?: string;     // contrato vinculado no NBS após geração
 
   status: ProcessStatus;
   documentos: Documento[];
