@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { mockUsers } from '../data/mockData';
 import { Plus, Search, Edit, Trash2 } from 'lucide-react';
-import type { UserRole } from '../types';
+import type { UserRole } from '../types/tipos';
 
 const roleLabels: Record<UserRole, string> = {
   administrador: 'Administrador',

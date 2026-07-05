@@ -1,4 +1,4 @@
-import { Processo, User } from '../types';
+import { Processo, User } from '../types/tipos';
 
 export const mockProcessos: Processo[] = [
   {

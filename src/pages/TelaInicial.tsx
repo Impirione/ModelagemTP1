@@ -1,12 +1,12 @@
-import WorkflowVendedor from "./WorkflowVendedor";
-import WorkflowGerente from "./WorkflowGerente";
-import WorkflowUsados from "./WorkflowUsados";
-import WorkflowFinanceiro from "./WorkflowFinanceiro";
-import WorkflowSecretaria from "./WorkflowSecretaria";
-import WorkflowLiberacao from "./WorkflowLiberacao";
-import WorkflowEntrega from "./WorkflowEntrega";
-import WorkflowPendencia from "./WorkflowPendencia";
-import WorkflowFinalizado from "./WorkflowFinalizado";
+import WorkflowVendedor from "../components/WorkflowVendedor";
+import WorkflowGerente from "../components/WorkflowGerente";
+import WorkflowUsados from "../components/WorkflowUsados";
+import WorkflowFinanceiro from "../components/WorkflowFinanceiro";
+import WorkflowSecretaria from "../components/WorkflowSecretaria";
+import WorkflowLiberacao from "../components/WorkflowLiberacao";
+import WorkflowEntrega from "../components/WorkflowEntrega";
+import WorkflowPendencia from "../components/WorkflowPendencia";
+import WorkflowFinalizado from "../components/WorkflowFinalizado";
 import { useAuth } from '../contexts/AuthContext';
 import { mockProcessos } from '../data/mockData';
 import { useNavigate } from 'react-router';
@@ -22,7 +22,7 @@ import {
   Trash2,
   Settings,
 } from 'lucide-react';
-import { Processo } from '../types';
+import { Processo } from '../types/tipos';
 
 const statusColors: Record<string, string> = {
   aguardando_gerente: 'bg-yellow-500',
@@ -46,39 +46,103 @@ export default function TelaInicialPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
+  const alterarStatus = (
+    processo: Processo,
+    novoStatus: Processo["status"]
+  ) => {
+    if (!window.confirm("Deseja continuar?")) return;
+
+    processo.status = novoStatus;
+  };
+
+  const aprovarGerente = (processo: Processo) => {
+
+    if (!window.confirm("Deseja aprovar este processo?")) return;
+
+    if (processo.possuiUsado || processo.tipoVeiculo === "seminovo") {
+      processo.status = "aguardando_usados";
+    } else {
+      processo.status = "aguardando_financeiro";
+    }
+
+    console.log(processo.status);
+  };
+
+  const devolverPendencia = (processo: Processo) => {
+
+    if (!window.confirm("Deseja devolver o processo para o vendedor?")) return;
+
+    processo.status = "pendencia";
+
+    console.log(processo.status);
+  };
+
   const renderAcoes = (processo: Processo) => {
-  switch (processo.status) {
-    case 'aguardando_vendedor':
-      return <WorkflowVendedor processo={processo} />;
+    switch (processo.status) {
 
-    case 'aguardando_gerente':
-      return <WorkflowGerente processo={processo} />;
+      case "aguardando_vendedor":
+        return (
+          <WorkflowVendedor
+            processo={processo}
+            alterarStatus={alterarStatus}
+          />
+        );
 
-    case 'aguardando_usados':
-      return <WorkflowUsados processo={processo} />;
+      case "aguardando_gerente":
+        return (
+          <WorkflowGerente
+            processo={processo}
+            alterarStatus={alterarStatus}
+          />
+        );
 
-    case 'aguardando_financeiro':
-      return <WorkflowFinanceiro processo={processo} />;
+      case 'aguardando_usados':
+        return <WorkflowUsados
+          processo={processo}
+          alterarStatus={alterarStatus}
+        />;
 
-    case 'aguardando_secretaria':
-      return <WorkflowSecretaria processo={processo} />;
+      case 'aguardando_financeiro':
+        return <WorkflowFinanceiro
+          processo={processo}
+          alterarStatus={alterarStatus}
+        />;
 
-    case 'aguardando_liberacao':
-      return <WorkflowLiberacao processo={processo} />;
+      case 'aguardando_secretaria':
+        return <WorkflowSecretaria
 
-    case 'aguardando_entrega':
-      return <WorkflowEntrega processo={processo} />;
+          processo={processo}
+          alterarStatus={alterarStatus}
+        />;
 
-    case 'pendencia':
-      return <WorkflowPendencia processo={processo} />;
+      case 'aguardando_liberacao':
+        return <WorkflowLiberacao
+          processo={processo}
+          alterarStatus={alterarStatus}
+        />;
 
-    case 'finalizado':
-      return <WorkflowFinalizado />;
+      case 'aguardando_entrega':
+        return <WorkflowEntrega
+          processo={processo}
+          alterarStatus={alterarStatus}
+        />;
 
-    default:
-      return null;
-  }
-};
+      case 'pendencia':
+        return <WorkflowPendencia
+          processo={processo}
+          alterarStatus={alterarStatus}
+        />;
+
+      case 'finalizado':
+        return <WorkflowFinalizado
+          processo={processo}
+          alterarStatus={alterarStatus}
+        />;
+
+      default:
+        return null;
+    }
+  };
 
   const meusProcessos = mockProcessos.filter(p =>
     user?.role === 'vendedor' ? p.vendedor.id === user.id : true
@@ -173,9 +237,7 @@ export default function TelaInicialPage() {
             processosRecentes.map((processo) => (
               <div
                 key={processo.id}
-                className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
-                onClick={() => navigate(`/processos/${processo.id}`)}
-              >
+                className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
 
                 {/* GRID 4 COLUNAS */}
                 <div className="grid grid-cols-4 gap-x-8 gap-y-3">
@@ -221,7 +283,7 @@ export default function TelaInicialPage() {
                   </div>
 
                   <div>
-                    
+
                   </div>
 
                   <div>

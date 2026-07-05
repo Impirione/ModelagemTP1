@@ -1,4 +1,4 @@
-import { Processo } from "../types";
+import { Processo } from "../types/tipos";
 
 interface Props {
   processo: Processo;

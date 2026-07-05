@@ -16,8 +16,21 @@ export type ProcessStatus =
   | 'aguardando_liberacao'
   | 'aguardando_vendedor'
   | 'aguardando_entrega'
-  | 'pendencia'
+  | 'pendencia_vendedor'
   | 'finalizado';
+
+export interface Pendencia {
+  setor:
+  | "gerente"
+  | "usados"
+  | "financeiro"
+  | "secretaria"
+  | "liberacao";
+
+  usuario: string;
+  observacao?: string;
+  data?: Date;
+}
 
 export type DocumentType =
   | 'proposta'
@@ -78,7 +91,7 @@ export interface Processo {
   tipoVeiculo: 'novo' | 'seminovo';
   tipoCliente: 'fisica' | 'juridica';
   possuiUsado: boolean;
-  
+
   cliente: Cliente;
   veiculoNovo?: Veiculo;
   veiculoUsado?: Veiculo;
@@ -88,6 +101,8 @@ export interface Processo {
   status: ProcessStatus;
   documentos: Documento[];
   aprovacoes: Aprovacao[];
+
+  retornoPendencia?: Pendencia;
 
   createdAt: Date;
   updatedAt: Date;
