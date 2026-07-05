@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Processo, Pendencia } from "../types/tipos";
-import { enviarPendencia } from "./workflow";
 
 interface Props {
   aberto: boolean;
@@ -8,6 +7,13 @@ interface Props {
   setor: Pendencia["setor"];
   usuario: string;
   onFechar: () => void;
+
+  enviarPendencia: (
+    processo: Processo,
+    setor: Pendencia["setor"],
+    usuario: string,
+    observacao: string
+  ) => void;
 }
 
 export default function ModalPendencia({
@@ -15,6 +21,7 @@ export default function ModalPendencia({
   processo,
   setor,
   usuario,
+  enviarPendencia,
   onFechar,
 }: Props) {
 
@@ -48,7 +55,7 @@ export default function ModalPendencia({
       <div className="bg-white rounded-lg p-6 w-[500px] shadow-lg">
 
         <h2 className="text-lg font-bold mb-4">
-          Resolver Pendência
+          Enviar Pendência
         </h2>
 
         <p className="text-sm text-gray-600 mb-2">

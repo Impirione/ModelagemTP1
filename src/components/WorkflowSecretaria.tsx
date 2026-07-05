@@ -10,9 +10,15 @@ interface Props {
     processo: Processo,
     novoStatus: Processo["status"]
   ) => void;
+  enviarPendencia: (
+    processo: Processo,
+    setor: "gerente" | "usados" | "financeiro" | "secretaria" | "liberacao",
+    usuario: string,
+    observacao: string
+  ) => void;
 }
 
-export default function WorkflowSecretaria({ processo, alterarStatus }: Props) {
+export default function WorkflowSecretaria({ processo, alterarStatus, enviarPendencia }: Props) {
 
   const { user } = useAuth();
   const [modalPendencia, setModalPendencia] = useState(false);
@@ -50,6 +56,7 @@ export default function WorkflowSecretaria({ processo, alterarStatus }: Props) {
         processo={processo}
         setor="secretaria"
         usuario={user.nome}
+        enviarPendencia={enviarPendencia}
         onFechar={() => setModalPendencia(false)}
       />
 

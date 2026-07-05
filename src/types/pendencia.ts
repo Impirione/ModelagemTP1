@@ -4,7 +4,7 @@ import { User } from "./tipos";
 import { Documento } from "./tipos";
 import { Aprovacao } from "./tipos";
 
-export interface Processo {
+export interface ProcessoPendencia {
   id: string;
 
   cliente: Cliente;

@@ -10,11 +10,19 @@ interface Props {
     processo: Processo,
     novoStatus: Processo["status"]
   ) => void;
+
+    enviarPendencia: (
+    processo: Processo,
+    setor: "gerente" | "usados" | "financeiro" | "secretaria" | "liberacao",
+    usuario: string,
+    observacao: string
+  ) => void;
 }
 
 export default function WorkflowGerente({
   processo,
   alterarStatus,
+  enviarPendencia,
 }: Props) {
 
   const precisaUsados =
@@ -52,6 +60,7 @@ export default function WorkflowGerente({
         processo={processo}
         setor="gerente"
         usuario={user.nome}
+        enviarPendencia={enviarPendencia}
         onFechar={() => setModalPendencia(false)}
       />
 
