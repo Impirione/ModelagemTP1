@@ -27,12 +27,14 @@ import { Processo } from '../types/tipos';
 import { ProcessoPendencia } from "../types/pendencia";
 
 const statusColors: Record<string, string> = {
-  aguardando_gerente: 'bg-yellow-500',
-  aguardando_financeiro: 'bg-blue-500',
-  aguardando_usados: 'bg-purple-500',
-  aguardando_secretaria: 'bg-orange-500',
-  aguardando_liberacao: 'bg-indigo-500',
-  pendente_vendedor: 'bg-indigo-500',
+  aguardando_gerente: 'bg-gray-200',
+  aguardando_vendedor: 'bg-gray-200',
+  aguardando_financeiro: 'bg-gray-200',
+  aguardando_usados: 'bg-gray-200',
+  aguardando_secretaria: 'bg-gray-200',
+  aguardando_liberacao: 'bg-gray-200',
+  pendencia_vendedor: 'bg-yellow-500',
+  aguardando_entrega: 'bg-yellow-500',
   finalizado: 'bg-green-500',
 };
 
@@ -42,25 +44,27 @@ const statusLabels: Record<string, string> = {
   aguardando_usados: 'Aguardando Usados',
   aguardando_secretaria: 'Aguardando Secretaria',
   aguardando_liberacao: 'Aguardando Liberação',
-  pendente_vendedor: 'Pendente Vendedor',
+  pendencia_vendedor: 'Aguardando Vendedor',
+  aguardando_entrega: 'Aguardando Vendedor',
+  aguardando_vendedor:'Aguardando Vendedor',
   finalizado: 'Encerrado',
 };
 
 export default function TelaInicialPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
- 
-  const enviarPendencia = (
-  processo: Processo,
-  setor: ProcessoPendencia["retornoPendencia"]["setor"],
-  usuario: string,
-  observacao: string
-) => {
 
-  setProcessos((anteriores) =>
-    anteriores.map((p) =>
-      p.id === processo.id
-        ? {
+  const enviarPendencia = (
+    processo: Processo,
+    setor: ProcessoPendencia["retornoPendencia"]["setor"],
+    usuario: string,
+    observacao: string
+  ) => {
+
+    setProcessos((anteriores) =>
+      anteriores.map((p) =>
+        p.id === processo.id
+          ? {
             ...p,
             status: "pendencia_vendedor",
             retornoPendencia: {
@@ -71,11 +75,11 @@ export default function TelaInicialPage() {
             },
             updatedAt: new Date(),
           }
-        : p
-    )
-  );
+          : p
+      )
+    );
 
-};
+  };
 
   const alterarStatus = (
     processo: Processo,
@@ -159,7 +163,7 @@ export default function TelaInicialPage() {
         />;
 
       case 'finalizado':
-        return <WorkflowFinalizado/>;
+        return <WorkflowFinalizado />;
 
       default:
         return null;
@@ -235,6 +239,7 @@ export default function TelaInicialPage() {
                 <div className={`p-3 rounded-full ${stat.bgColor}`}>
                   <Icon className={`h-6 w-6 ${stat.color}`} />
                 </div>
+
               </div>
             </div>
           );
@@ -305,10 +310,10 @@ export default function TelaInicialPage() {
                   </div>
 
                   <div>
-                    {processo.status === 'aguardando_entrega' || processo.status === 'pendencia_vendedor'
-                      ? 'aguardando_vendedor'
-                      : processo.status
-                    }
+                    <span className={`px-3 py-1 text-white rounded ${statusColors[processo.status]}`}>
+                      {statusLabels[processo.status]}                      
+                    </span>
+
                   </div>
 
                   <div>

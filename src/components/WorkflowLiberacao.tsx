@@ -35,7 +35,7 @@ export default function WorkflowLiberacao({ processo, alterarStatus, enviarPende
           onClick={() =>
             alterarStatus(processo, proximoStatus(processo))
           }
-          className="w-full bg-blue-600 text-white rounded py-2"
+          className="w-full rounded bg-green-600 text-white py-2 hover:bg-green-700"
         >
           Enviar para Entrega
         </button>

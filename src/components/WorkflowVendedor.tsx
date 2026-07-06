@@ -19,7 +19,7 @@ export default function WorkflowVendedor({
             onClick={() =>
                 alterarStatus(processo, proximoStatus(processo))
             }
-            className="w-full bg-blue-600 text-white rounded py-2"
+            className="w-full rounded bg-green-600 text-white py-2 hover:bg-green-700"
         >
             Enviar para aprovação do gerente
         </button>

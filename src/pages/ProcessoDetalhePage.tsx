@@ -15,12 +15,13 @@ import {
 } from 'lucide-react';
 
 const statusColors: Record<string, string> = {
-  aguardando_gerente: 'bg-yellow-500',
-  aguardando_financeiro: 'bg-blue-500',
-  aguardando_usados: 'bg-purple-500',
-  aguardando_secretaria: 'bg-orange-500',
-  aguardando_liberacao: 'bg-indigo-500',
-  Finzalido: 'bg-green-500',
+  aguardando_gerente: 'bg-gray-200',
+  aguardando_financeiro: 'bg-gray-200',
+  aguardando_usados: 'bg-gray-200',
+  aguardando_secretaria: 'bg-gray-200',
+  aguardando_liberacao: 'bg-gray-200',
+  pendente_vendedor: 'bg-indigo-500',
+  finalizado: 'bg-green-500',
 };
 
 const statusLabels: Record<string, string> = {
@@ -55,8 +56,8 @@ export default function ProcessoDetalhePage() {
     return (
       <div className="text-center py-12">
         <p className="text-gray-600">Processo não encontrado</p>
-        <button 
-          className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700" 
+        <button
+          className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
           onClick={() => navigate('/processos')}
         >
           Voltar para Processos
@@ -64,16 +65,6 @@ export default function ProcessoDetalhePage() {
       </div>
     );
   }
-
-  const podeAprovar = () => {
-    if (!user) return false;
-
-    const aprovacaoPendente = processo.aprovacoes.find(
-      a => a.role === user.role && a.status === 'pendente'
-    );
-
-    return !!aprovacaoPendente;
-  };
 
   const handleAprovar = () => {
     alert('Processo aprovado com sucesso!');
@@ -101,7 +92,7 @@ export default function ProcessoDetalhePage() {
           </button>
           <div>
             <h1 className="text-3xl font-bold text-gray-900">
-              Processo #{processo.id}
+              Processo {processo.id}
             </h1>
             <p className="text-gray-600 mt-1">{processo.cliente.nome}</p>
           </div>
@@ -119,12 +110,6 @@ export default function ProcessoDetalhePage() {
             <div className="border-b border-gray-200">
               <div className="flex">
                 <button
-                  onClick={() => setActiveTab('detalhes')}
-                  className={`px-6 py-3 font-medium ${activeTab === 'detalhes' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500'}`}
-                >
-                  Detalhes
-                </button>
-                <button
                   onClick={() => setActiveTab('documentos')}
                   className={`px-6 py-3 font-medium ${activeTab === 'documentos' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500'}`}
                 >
@@ -134,76 +119,17 @@ export default function ProcessoDetalhePage() {
                   onClick={() => setActiveTab('aprovacoes')}
                   className={`px-6 py-3 font-medium ${activeTab === 'aprovacoes' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500'}`}
                 >
-                  Aprovações
+                  Histórico
                 </button>
               </div>
             </div>
-
-            <div className="p-6">
-              {activeTab === 'detalhes' && (
-                <div className="space-y-4">
-                  {/* Cliente Info */}
-                  <div className="border border-gray-200 rounded-lg p-6">
-                    <div className="flex items-center gap-3 mb-4">
-                      <User className="h-5 w-5 text-gray-600" />
-                      <h3 className="text-lg font-semibold">Informações do Cliente</h3>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <p className="text-gray-500">Nome</p>
-                        <p className="font-medium">{processo.cliente.nome}</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-500">CPF</p>
-                        <p className="font-medium">{processo.cliente.cpf}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Veículo Info */}
-                  {processo.veiculoNovo && (
-                    <div className="border border-gray-200 rounded-lg p-6">
-                      <div className="flex items-center gap-3 mb-4">
-                        <Car className="h-5 w-5 text-gray-600" />
-                        <h3 className="text-lg font-semibold">Veículo Novo</h3>
-                      </div>
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-
-                        <div>
-                          <p className="text-gray-500">Placa</p>
-                          <p className="font-medium">{processo.veiculoNovo.placa}</p>
-                        </div>
-                        <div className="col-span-2">
-                          <p className="text-gray-500">Chassi</p>
-                          <p className="font-medium">{processo.veiculoNovo.chassi}</p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {processo.veiculoUsado && (
-                    <div className="border border-gray-200 rounded-lg p-6">
-                      <div className="flex items-center gap-3 mb-4">
-                        <Car className="h-5 w-5 text-gray-600" />
-                        <h3 className="text-lg font-semibold">Veículo Usado (Entrada)</h3>
-                      </div>
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <p className="text-gray-500">Placa</p>
-                          <p className="font-medium">{processo.veiculoUsado.placa}</p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-
+            <div>
               {activeTab === 'documentos' && (
                 <div>
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-semibold">Documentos Anexados</h3>
-                    <button 
-                      onClick={handleUpload} 
+                    <button
+                      onClick={handleUpload}
                       className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
                     >
                       <Upload className="h-4 w-4" />
@@ -244,7 +170,7 @@ export default function ProcessoDetalhePage() {
 
               {activeTab === 'aprovacoes' && (
                 <div>
-                  <h3 className="text-lg font-semibold mb-4">Histórico de Aprovações</h3>
+                  <h3 className="text-lg font-semibold mb-4">Histórico do Processo</h3>
 
                   <div className="space-y-4">
                     {processo.aprovacoes.map((aprovacao) => (
@@ -252,10 +178,9 @@ export default function ProcessoDetalhePage() {
                         key={aprovacao.id}
                         className="flex items-start gap-4 p-4 border border-gray-200 rounded-lg"
                       >
-                        <div className={`p-2 rounded-full ${
-                          aprovacao.status === 'aprovado' ? 'bg-green-100' :
+                        <div className={`p-2 rounded-full ${aprovacao.status === 'aprovado' ? 'bg-green-100' :
                           aprovacao.status === 'reprovado' ? 'bg-red-100' : 'bg-yellow-100'
-                        }`}>
+                          }`}>
                           {aprovacao.status === 'aprovado' && <CheckCircle2 className="h-5 w-5 text-green-600" />}
                           {aprovacao.status === 'reprovado' && <XCircle className="h-5 w-5 text-red-600" />}
                           {aprovacao.status === 'pendente' && <Clock className="h-5 w-5 text-yellow-600" />}
@@ -307,42 +232,6 @@ export default function ProcessoDetalhePage() {
               </div>
             </div>
           </div>
-
-          {/* Actions */}
-          {podeAprovar() && (
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-lg font-semibold mb-4">Ações</h3>
-              <div className="space-y-4">
-                <div>
-                  <label htmlFor="observacao" className="block text-sm font-medium mb-2">Observação</label>
-                  <textarea
-                    id="observacao"
-                    placeholder="Adicione uma observação (opcional para aprovar, obrigatório para reprovar)"
-                    value={observacao}
-                    onChange={(e) => setObservacao(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    rows={4}
-                  />
-                </div>
-                <div className="flex gap-3">
-                  <button
-                    onClick={handleAprovar}
-                    className="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
-                  >
-                    <CheckCircle2 className="h-4 w-4" />
-                    Aprovar
-                  </button>
-                  <button
-                    onClick={handleReprovar}
-                    className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
-                  >
-                    <XCircle className="h-4 w-4" />
-                    Reprovar
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
