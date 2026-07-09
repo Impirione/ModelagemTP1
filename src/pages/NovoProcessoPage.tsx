@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ArrowLeft, Save } from 'lucide-react';
+import { createProcesso } from '../services/api';
+import { emit } from '../services/events';
 
 export default function NovoProcessoPage() {
   const navigate = useNavigate();
@@ -13,8 +15,27 @@ export default function NovoProcessoPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Processo criado com sucesso!');
-    navigate('/processos');
+    const payload: any = {
+      tipoVeiculo: tipoProcesso === 'venda' ? 'novo' : 'seminovo',
+      tipoCliente: tipoCliente,
+      possuiUsado: temUsado === 'sim',
+      proposta: 'NOVA-' + Date.now(),
+      cliente: { id: 'c-' + Date.now(), nome: 'Cliente Exemplo', cpf: tipoCliente === 'fisica' ? '000.000.000-00' : undefined, cnpj: tipoCliente === 'juridica' ? '00.000.000/0001-00' : undefined },
+      vendedor: { id: 'u1', nome: 'Usuário', email: 'user@example.com', role: 'vendedor', ativo: true, createdAt: new Date().toISOString() },
+      status: 'aguardando_gerente',
+      documentos: [],
+      aprovacoes: [],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+
+    createProcesso(payload).then(() => {
+      // notify other components to refetch
+      emit('processos:changed')
+      navigate('/processos')
+    }).catch(() => {
+      alert('Falha ao criar processo')
+    })
   };
 
   const handleCapturar = () => {

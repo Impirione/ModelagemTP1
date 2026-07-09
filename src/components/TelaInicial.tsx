@@ -8,7 +8,8 @@ import WorkflowEntrega from "./WorkflowEntrega";
 import WorkflowPendencia from "./WorkflowPendencia";
 import WorkflowFinalizado from "./WorkflowFinalizado";
 import { useAuth } from '../contexts/AuthContext';
-import { mockProcessos } from '../data/mockData';
+import { useEffect, useState } from 'react';
+import { getProcessos } from '../services/api';
 import { useNavigate } from 'react-router';
 import {
   Clock,
@@ -45,6 +46,13 @@ const statusLabels: Record<string, string> = {
 export default function TelaInicialPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [processos, setProcessos] = useState<Processo[]>([]);
+
+  useEffect(() => {
+    let mounted = true
+    getProcessos().then(data => { if (mounted) setProcessos(data) }).catch(() => {})
+    return () => { mounted = false }
+  }, [])
 
   const renderAcoes = (processo: Processo) => {
   switch (processo.status) {
@@ -80,7 +88,7 @@ export default function TelaInicialPage() {
   }
 };
 
-  const meusProcessos = mockProcessos.filter(p =>
+  const meusProcessos = processos.filter(p =>
     user?.role === 'vendedor' ? p.vendedor.id === user.id : true
   );
 
@@ -232,7 +240,7 @@ export default function TelaInicialPage() {
 
                     <div className="flex items-center gap-2">
                       <span className="font-semibold text-black">Data: </span>
-                      <span className="text-xs text-gray-600">{processo.createdAt.toLocaleString('pt-BR')}</span>
+                      <span className="text-xs text-gray-600">{new Date(processo.createdAt).toLocaleString('pt-BR')}</span>
                     </div>
                   </div>
 
@@ -241,7 +249,7 @@ export default function TelaInicialPage() {
                       Cliente: {processo.cliente.nome}
                     </p>
 
-                    <p className="text-xs text-gray-600">
+                      <p className="text-xs text-gray-600">
                       {processo.tipoCliente === 'fisica'
                         ? 'CPF'
                         : 'CNPJ'}:

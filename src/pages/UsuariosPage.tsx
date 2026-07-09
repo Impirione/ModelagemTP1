@@ -1,7 +1,9 @@
-import { useState } from 'react';
-import { mockUsers } from '../data/mockData';
+import { useState, useEffect } from 'react';
+import { getUsers } from '../services/api';
 import { Plus, Search, Edit, Trash2 } from 'lucide-react';
 import type { UserRole } from '../types';
+import { createUser, deleteUser } from '../services/api';
+import { emit, on } from '../services/events';
 
 const roleLabels: Record<UserRole, string> = {
   administrador: 'Administrador',
@@ -22,21 +24,37 @@ export default function UsuariosPage() {
     email: '',
     role: ['vendedor'] as UserRole,
   });
+  const [users, setUsers] = useState<any[]>([])
 
-  const filteredUsers = mockUsers.filter(u =>
+  useEffect(() => {
+    let mounted = true
+    getUsers().then(data => { if (mounted) setUsers(data) }).catch(() => {})
+    const unsub = on('users:changed', () => { if (mounted) getUsers().then(d => setUsers(d)).catch(() => {}) })
+    return () => { mounted = false; unsub() }
+  }, [])
+
+  const filteredUsers = users.filter(u =>
     u.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
     u.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Usuário criado com sucesso!');
-    setIsDialogOpen(false);
-    setFormData({ nome: '', email: '', roles: ['vendedor'] });
+    const payload = { nome: formData.nome, email: formData.email, role: formData.role[0], ativo: true, createdAt: new Date().toISOString() }
+    createUser(payload).then((created: any) => {
+      setUsers(prev => [created, ...prev])
+      setIsDialogOpen(false)
+      setFormData({ nome: '', email: '', role: ['vendedor'] })
+      emit('users:changed')
+    }).catch(() => alert('Falha ao criar usuário'))
   };
 
   const handleDelete = (userId: string) => {
-    alert('Usuário excluído com sucesso');
+    if (!confirm('Confirma exclusão?')) return;
+    deleteUser(userId).then(() => {
+      setUsers(prev => prev.filter(u => u.id !== userId))
+      emit('users:changed')
+    }).catch(() => alert('Falha ao excluir usuário'))
   };
 
   return (

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { useAuth } from '../contexts/AuthContext';
-import { mockProcessos } from '../data/mockData';
+import { getProcesso, updateProcesso } from '../services/api';
+import { emit } from '../services/events';
 import { proximoStatus } from '../components/workflow';
 import { Aprovacao, Processo, ProcessStatus, UserRole } from '../types';
 import {
@@ -82,10 +83,12 @@ export default function ProcessoDetalhePage() {
   const [processoAtual, setProcessoAtual] = useState<Processo | null>(null);
 
   useEffect(() => {
-    const processoEncontrado = mockProcessos.find(p => p.id === id) ?? null;
-    setProcessoAtual(processoEncontrado);
-    setObservacao('');
-    setActiveTab('detalhes');
+    let mounted = true
+    if (!id) return
+    getProcesso(id).then(data => { if (mounted) setProcessoAtual(data) }).catch(() => { if (mounted) setProcessoAtual(null) })
+    setObservacao('')
+    setActiveTab('detalhes')
+    return () => { mounted = false }
   }, [id]);
 
   const processo = processoAtual;
@@ -135,6 +138,12 @@ export default function ProcessoDetalhePage() {
     setProcessoAtual(prev => {
       if (!prev) return prev;
 
+        // persist update
+        if (processo) {
+          updateProcesso(processo.id, { ...processo, status: proximaEtapa ?? 'finalizado' })
+            .then(() => emit('processos:changed'))
+            .catch(() => {})
+        }
       const aprovacoesAtualizadas: Aprovacao[] = prev.aprovacoes.map(aprovacao =>
         aprovacao.id === aprovacaoPendente.id
           ? {
@@ -202,6 +211,11 @@ export default function ProcessoDetalhePage() {
     setProcessoAtual(prev => {
       if (!prev) return prev;
 
+        if (processo) {
+          updateProcesso(processo.id, { ...processo, status: 'pendencia' })
+            .then(() => emit('processos:changed'))
+            .catch(() => {})
+        }
       const aprovacoesAtualizadas: Aprovacao[] = prev.aprovacoes.map(aprovacao =>
         aprovacao.id === aprovacaoPendente.id
           ? {

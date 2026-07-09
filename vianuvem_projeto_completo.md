@@ -579,6 +579,32 @@ A última etapa do trabalho prático corresponde à **entrega do código-fonte**
 
 ---
 
+### Status de Desenvolvimento do Sistema
+
+#### Alterações realizadas até agora
+
+- Estruturação da aplicação front-end em React com navegação entre login, tela inicial, processos, novo processo, detalhe de processo e usuários.
+- Implementação de autenticação com armazenamento local de sessão e fluxo em duas etapas, simulando a validação por Google Authenticator.
+- Criação de rotas protegidas para impedir acesso às telas internas sem autenticação.
+- Integração do front-end com um back-end Node.js/Express usando persistência em JSON para usuários e processos.
+- Implementação das telas de listagem e cadastro/remoção básica de usuários.
+- Implementação da listagem de processos com busca, filtros e atualização reativa quando há mudanças no backend.
+- Implementação da tela de novo processo com fluxo guiado por etapas para definição do tipo de operação, tipo de cliente e presença de veículo usado.
+- Implementação da tela de detalhe do processo com apoio às ações de aprovação e reprovação por perfil, além de registro de observações.
+- Organização do layout principal com menu lateral, cabeçalho e identificação do usuário logado.
+
+#### Próximas atualizações previstas
+
+- Ajustar o fluxo de cadastro e edição de usuários para suportar permissões múltiplas com consistência no formulário e no backend.
+- Completar as validações de negócio do processo, incluindo campos obrigatórios, estados pendentes e transições mais rigorosas.
+- Evoluir o fluxo de documentos para representar upload real, validação de tipos de arquivo e associação por etapa do processo.
+- Refinar o painel de detalhe do processo para mostrar histórico, comentários e trilha de auditoria com mais clareza.
+- Melhorar a autenticação para separar de forma mais explícita a etapa de senha e a etapa de 2FA.
+- Revisar a experiência visual e responsiva das telas para deixar a apresentação mais consistente em sala.
+- Atualizar a documentação final com o estado consolidado da implementação e as diferenças em relação à especificação original.
+
+---
+
 ## Referência Rápida — Tipos TypeScript do Projeto
 
 Os tipos abaixo foram definidos no arquivo `index.ts` do projeto e correspondem ao diagrama de classes acima:

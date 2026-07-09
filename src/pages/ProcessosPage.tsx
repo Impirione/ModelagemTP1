@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useAuth } from '../contexts/AuthContext';
-import { mockProcessos } from '../data/mockData';
+import { getProcessos } from '../services/api';
+import { on } from '../services/events';
 import { Plus, Search, Filter } from 'lucide-react';
 
 const statusColors: Record<string, string> = {
@@ -28,21 +29,31 @@ export default function ProcessosPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('todos');
   const [filterTipo, setFilterTipo] = useState<string>('todos');
+  const [processos, setProcessos] = useState<any[]>([])
 
-  let processos = user?.role === 'vendedor'
-    ? mockProcessos.filter(p => p.vendedor.id === user.id)
-    : mockProcessos;
+  useEffect(() => {
+    let mounted = true
+    getProcessos().then(data => { if (mounted) setProcessos(data) }).catch(() => {})
+    const unsub = on('processos:changed', () => {
+      getProcessos().then(data => { if (mounted) setProcessos(data) }).catch(() => {})
+    })
+    return () => { mounted = false; unsub() }
+  }, [])
+
+  let lista = user?.role === 'vendedor'
+    ? processos.filter(p => p.vendedor.id === user.id)
+    : processos;
 
   if (searchTerm) {
-    processos = processos.filter(p =>
+    lista = lista.filter(p =>
       p.cliente.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.cliente.cpf.includes(searchTerm) ||
+      (p.cliente.cpf || '').includes(searchTerm) ||
       p.id.includes(searchTerm)
     );
   }
 
   if (filterStatus !== 'todos') {
-    processos = processos.filter(p => p.status === filterStatus);
+    lista = lista.filter(p => p.status === filterStatus);
   }
 
   return (
@@ -95,7 +106,7 @@ export default function ProcessosPage() {
 
       {/* Processes List */}
       <div className="space-y-4">
-        {processos.length === 0 ? (
+        {lista.length === 0 ? (
           <div className="bg-white p-12 text-center rounded-lg shadow">
             <Filter className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <p className="text-gray-600 mb-4">Nenhum processo encontrado com os filtros aplicados</p>
@@ -111,7 +122,7 @@ export default function ProcessosPage() {
             </button>
           </div>
         ) : (
-          processos.map((processo) => (
+          lista.map((processo) => (
             <div
               key={processo.id}
               className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow cursor-pointer"
